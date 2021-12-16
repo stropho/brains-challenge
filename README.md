@@ -20,8 +20,7 @@ We have provided you with Pokemon data in a json file. Your mission is to create
   - Query a pokemon by name
   - Query list of pokemon types
   - Mutation to mark/unmark pokemon as favorite
-
-- **Tests** are important and if time allows it, we'd like to see _some_ test coverage.
+- Test are important and if time allows it, we'd like to see some test coverage
 
 ## Technology
 
