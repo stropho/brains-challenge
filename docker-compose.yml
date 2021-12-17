@@ -1,0 +1,9 @@
+mongodb:
+  image: mongo
+  ports:
+    - "27017:27017"
+
+mongo-init:
+  build: ./mongo/init
+  links:
+    - mongodb
