@@ -3,16 +3,38 @@ import { schemaComposer } from 'graphql-compose'
 import { PokemonModel, allFieldsAndAliases } from './mongoose'
 import type { Pokemon } from './pokemon-types'
 import type { Document } from 'mongoose'
+import { removeSubset } from './utils'
 
 const PokemonTC = composeMongoose<Document<Pokemon>>(PokemonModel as any) // sry, there is a type mismatch
 
-const singlePokemonFilterables = new Set(['_id', 'id', 'name', 'favorite'])
-const singlePokemonNonFilterFields = allFieldsAndAliases.filter(
-	(key) => !singlePokemonFilterables.has(key)
-)
+const multiPokemonsNonFilterableFields = removeSubset(allFieldsAndAliases, [
+	'name',
+	'favorite',
+	'types',
+])
+
 schemaComposer.Query.addFields({
 	getPokemon: PokemonTC.mongooseResolvers.findOne({
-		filter: { removeFields: singlePokemonNonFilterFields },
+		filter: {
+			removeFields: removeSubset(allFieldsAndAliases, [
+				'_id',
+				'id',
+				'name',
+				'favorite',
+			]),
+		},
+	}),
+	getPokemons: PokemonTC.mongooseResolvers.findMany({
+		filter: {
+			removeFields: multiPokemonsNonFilterableFields,
+		},
+	}),
+	getPokemonsPaginated: PokemonTC.mongooseResolvers.pagination({
+		findManyOpts: {
+			filter: {
+				removeFields: multiPokemonsNonFilterableFields,
+			},
+		},
 	}),
 })
 
