@@ -36,6 +36,13 @@ schemaComposer.Query.addFields({
 			},
 		},
 	}),
+	getPokemonTypes: schemaComposer.createResolver({
+		name: 'getPokemonTypes',
+		type: 'type PokemonTypesList {data: [String]}',
+		resolve: async () => {
+			return { data: await PokemonModel.distinct('types') }
+		},
+	}),
 })
 
 const immutableFields = allFieldsAndAliases.filter((key) => key !== 'favorite')
